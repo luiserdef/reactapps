@@ -1,0 +1,63 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+body{
+  background-color:#2a3279;
+}
+
+.container{
+  margin:0 auto;
+  max-width: 1024px;
+}
+
+.game-area{
+  padding: 2em 100px;
+  height: 100vh;
+  display: flex;
+  background-color:#000000;
+}
+
+.portals{
+  color:aliceblue;
+  gap: 10px;
+  display: flex;
+  align-self: flex-end;
+}
+
+.portal-container{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.portal-container img{
+  width: 100%;
+  transition: 1s;
+}
+.portal-container img:hover{
+  cursor: pointer;
+}
+.portal-container img:active{
+  transform: scale(0.5);
+  transition: .2s;
+}
+
+.character-img{
+  top: 0;
+  right: 50%;
+  transform: translate(-50,-50);
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+@media (max-width: 600px){
+  .game-area{
+    padding: 2em 15px;
+  }
+  .portals{
+    font-size: .8em;    
+  }
+}
