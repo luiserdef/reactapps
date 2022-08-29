@@ -2,7 +2,16 @@ import btBackImg from '../assets/icons/arrow-left.svg'
 import btNextImg from '../assets/icons/arrow-right.svg'
 import ProductCard from './ProductCard'
 
+
 const Products=()=>{
+// const[products,setProducts]=react.useState([])
+
+// React.useEffect(()=>{
+//     fetch('')
+//     .then(response=>response.json())
+//     .then(reponse=>console.log('test data'))
+// },[])
+
     return(
         <main className='main'>
             <div className='products-filter-section'>
