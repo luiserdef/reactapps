@@ -1,16 +1,56 @@
 import btBackImg from '../assets/icons/arrow-left.svg'
 import btNextImg from '../assets/icons/arrow-right.svg'
 import ProductCard from './ProductCard'
+import {getProducts} from '../services/products.js'
 
 
-const Products=()=>{
-// const[products,setProducts]=react.useState([])
+const Products=(props)=>{
 
-// React.useEffect(()=>{
-//     fetch('')
-//     .then(response=>response.json())
-//     .then(reponse=>console.log('test data'))
-// },[])
+    const Productsfet=(input)=> new Promise((resolve,reject)=>{
+        
+        setTimeout(()=>{
+            const values=[]
+            for(let i=0; i<input-1;i++){
+                values.push(i)
+                if(i==5){
+                    reject({
+                        error:true,
+                        message:'es error'
+                    })
+                }
+                
+                        resolve({
+                            error:false,
+                            value:values
+                        })
+            }
+        },2000)
+    })
+    
+    // Productsfet(10)
+    // .then(response=>console.log(response))
+    // .catch(err=>console.log(err.message))
+    // getProducts.then(data=>console.log(data))
+
+    getProducts.then(data=>{
+        
+        console.log('wait')
+    
+    })
+   
+
+    // const first =()=>console.log('1')
+    // const second =()=>{
+    //     setTimeout(()=>{
+    //         console.log('2')
+    //     },0)
+    // }    
+    // const third=()=>console.log('3')
+
+    // console.log(first())
+    // console.log(second())
+    // console.log(third())
+
 
     return(
         <main className='main'>
