@@ -6,9 +6,9 @@ return(
     <header className='header'>
         <a href='#'><img src={logo} className='logo' ></img></a>
         <div className='profile-info'>
-            <h2>John Nuke</h2>
+            <h2>{props.name}</h2>
             <div className='user-info-points'>
-                <p>600</p>
+                <p>{props.coins}</p>
                 <img src={coin}></img>
             </div>
         </div>

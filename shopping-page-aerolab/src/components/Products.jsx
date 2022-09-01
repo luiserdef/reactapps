@@ -8,13 +8,14 @@ import ReactLoading from 'react-loading'
 const Products=(props)=>{
 
     const [products,setProducts]= useState([])
-    const [productsFilter,setProductsFilter]=useState(products)
+    const [productsFilter,setProductsFilter]=useState([])
+    const [filterOptionStatus,setFilterOptionStatus]=useState({option:'recent'})
 
     useEffect(()=>{
         getProducts.then(data=>{
             setProducts(data) 
             setProductsFilter(data) 
-        })  
+        })
     },[])
 
     const productsList= productsFilter.map((product,id)=>{
@@ -22,6 +23,7 @@ const Products=(props)=>{
                 name={product.name}
                 category={product.category}
                 cost={product.cost}
+                userCoins={props.coins}
                 img={product.img.url}
                 />
         })
@@ -31,6 +33,14 @@ const Products=(props)=>{
                 return a.cost - b.cost
             })
             setProductsFilter(newFilteredProducts)
+            setFilterOptionStatus({option:'lowest'})
+            console.log('lowest')
+        }
+
+        const filterProductsMostRecent =()=>{
+            setProductsFilter(products)
+            setFilterOptionStatus({option:'recent'})
+            console.log('recent')
         }
         
         const filterProductsHighestPrice =()=>{
@@ -38,10 +48,17 @@ const Products=(props)=>{
                 return b.cost - a.cost
             })
             setProductsFilter(newFilteredProducts)
+            setFilterOptionStatus({option:'highest'})
+            console.log('highest')
         }
 
-        const filterProductsMostRecent =()=>{
-            setProductsFilter(products)
+
+        const isOptionSelected = (option)=>{
+            if(filterOptionStatus.option == option){
+                return true
+            }else{
+                return false
+            }
         }
 
     return(
@@ -50,16 +67,29 @@ const Products=(props)=>{
                 <div className='products-filter-actions'>
                     <p className='products-section-count'>32 of 32 products</p>
                     <p>Sort by:</p>
-                    <button className='bt-filter bt-lowest-price' onClick={filterProductsLowestPrice}>Lowest Price</button>
-                    <button className='bt-filter bt-most-recent' onClick={filterProductsMostRecent}>Most Recent</button>
-                    <button className='bt-filter bt-highest-price' onClick={filterProductsHighestPrice}>Highest Price</button>
+                    <div className='filter-buttons'>
+                        <button 
+                            className={`bt-filter ${isOptionSelected('lowest') ? 'bt-filter-active' : ''}`} 
+                            onClick={filterProductsLowestPrice}>
+                            Lowest Price
+                        </button>
+                        <button 
+                            className={`bt-filter ${isOptionSelected('recent') ? 'bt-filter-active' : ''}`}  
+                            onClick={filterProductsMostRecent}>
+                            Most Recent
+                        </button>
+                        <button 
+                            className={`bt-filter ${isOptionSelected('highest') ? 'bt-filter-active' : ''}`} 
+                            onClick={filterProductsHighestPrice}>
+                            Highest Price
+                        </button>
+                    </div>
                 </div>
                 <div className='bt-products-back-next'>
                     <img src={btBackImg}></img>
                     <img src={btNextImg}></img>
                 </div>
             </div>
-            < hr style={{margin:'10px 0'}}></hr>
             <div className='products-container'>
                 {
                     products.length>0 
