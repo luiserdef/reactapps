@@ -155,8 +155,10 @@
 .bt-products-back-next img{
   width: 35px;
 }
-
-/**PRODUTCS CONTAINER**/
+.bt-pagination:hover{
+  cursor:pointer;
+}
+/**PRODUCTS CONTAINER**/
 
 .products-container{
   display: grid;
@@ -179,10 +181,8 @@
 }
 .product-card:hover{
   transform: translateY(-10px);
-  cursor:pointer;
 }
 .product-card:hover .reedem-products{
-  
   transition: 1s;
   cursor:auto;
   display: flex;
@@ -199,6 +199,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: 2s;
 }
 .points-info{
   display: flex;
@@ -221,13 +222,20 @@
   margin-right: 5px;
 }
  .product-img{
-  overflow: hidden;
+  
+  z-index: -1;
+  position: relative;
+    overflow: hidden;
    height: 70%;
    width: 100%;
    border-bottom: solid #dadada 1px;
 }
 .product-img img{
-  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  height: 100%;
 }
 
 .product-detail{
@@ -246,9 +254,12 @@
   right: 7px;
   width: 45px;
   height: 45px;
+  transition: .2s;
 }
 
 .bt-buy-product-action:hover{
+  transform: scale(1.1);
+  transition: .2s;
   cursor:pointer;
 }
 

@@ -6,8 +6,15 @@ import {useState, useEffect} from 'react'
 import ReactLoading from 'react-loading'
 
 const Products=(props)=>{
-
+    const productsShowPerPage = 6
     const [products,setProducts]= useState([])
+
+    const startPaginationProducts={
+        prevEnd:productsShowPerPage - 1,
+        actualStart:0,
+        actualEnd: productsShowPerPage - 1
+    }
+    const[paginationProducts,setPaginationProducts]=useState(startPaginationProducts)
     const [productsFilter,setProductsFilter]=useState([])
     const [filterOptionStatus,setFilterOptionStatus]=useState({option:'recent'})
 
@@ -18,15 +25,24 @@ const Products=(props)=>{
         })
     },[])
 
-    const productsList= productsFilter.map((product,id)=>{
-        return <ProductCard key={id}
-                name={product.name}
-                category={product.category}
-                cost={product.cost}
-                userCoins={props.coins}
-                img={product.img.url}
-                />
-        })
+
+
+
+    let productsList =[]
+    if(productsFilter.length>0){
+        for (let i = paginationProducts.actualStart;i<=paginationProducts.actualEnd;i++){
+            productsList.push(
+                <ProductCard key={i}
+                    name={productsFilter[0].name}
+                    category={productsFilter[i].category}
+                    cost={productsFilter[i].cost}
+                    userCoins={props.coins}
+                    img={productsFilter[i].img.url}
+                 />
+            )
+        }
+    }
+
 
         const filterProductsLowestPrice =()=>{
             const newFilteredProducts= products.slice().sort((a,b)=>{
@@ -34,13 +50,13 @@ const Products=(props)=>{
             })
             setProductsFilter(newFilteredProducts)
             setFilterOptionStatus({option:'lowest'})
-            console.log('lowest')
+            setPaginationProducts(startPaginationProducts)
         }
 
         const filterProductsMostRecent =()=>{
             setProductsFilter(products)
             setFilterOptionStatus({option:'recent'})
-            console.log('recent')
+            setPaginationProducts(startPaginationProducts)
         }
         
         const filterProductsHighestPrice =()=>{
@@ -49,7 +65,7 @@ const Products=(props)=>{
             })
             setProductsFilter(newFilteredProducts)
             setFilterOptionStatus({option:'highest'})
-            console.log('highest')
+            setPaginationProducts(startPaginationProducts)
         }
 
 
@@ -61,11 +77,57 @@ const Products=(props)=>{
             }
         }
 
+    const isProductPositionExists=(position)=>{
+        return (productsFilter[position]!=null) ? true : false
+    }
+
+    const paginationNext=()=>{
+        let startValue = paginationProducts.actualEnd+1
+        let endValue=0
+
+        if(isProductPositionExists(paginationProducts.actualEnd + productsShowPerPage)){
+            endValue = paginationProducts.actualEnd+ productsShowPerPage
+        }else{
+            endValue = productsFilter.length-1
+        }
+
+        setPaginationProducts(prev=>{
+            return{
+                prevEnd:prev.actualEnd,
+                actualStart:startValue,
+                actualEnd:endValue
+            }
+        })
+    }
+
+    const paginationBack=()=>{
+        let startValue=0
+        let endValue = paginationProducts.actualEnd - productsShowPerPage
+        
+        if(isProductPositionExists(paginationProducts.actualStart-productsShowPerPage)){
+            startValue = paginationProducts.actualStart - productsShowPerPage
+            
+            if(paginationProducts.actualEnd === productsFilter.length-1){
+                endValue = paginationProducts.prevEnd
+            }
+        }else{
+            startValue = 0            
+        }
+        
+        setPaginationProducts(prev=>{
+            return{
+                prevEnd:prev.actualEnd,
+                actualStart:startValue,
+                actualEnd:endValue
+            }
+        })
+    }
+
     return(
         <main className='main'>
             <div className='products-filter-section'>
                 <div className='products-filter-actions'>
-                    <p className='products-section-count'>32 of 32 products</p>
+                    <p className='products-section-count'>{paginationProducts.actualEnd+1} of 32 products</p>
                     <p>Sort by:</p>
                     <div className='filter-buttons'>
                         <button 
@@ -86,8 +148,18 @@ const Products=(props)=>{
                     </div>
                 </div>
                 <div className='bt-products-back-next'>
-                    <img src={btBackImg}></img>
-                    <img src={btNextImg}></img>
+                    <button 
+                        className='bt-pagination' 
+                        onClick={paginationBack}
+                        disabled={paginationProducts.actualStart === 0}>
+                        <img src={btBackImg}></img>
+                    </button>
+                    <button 
+                        className='bt-pagination'
+                        onClick={paginationNext}
+                        disabled={paginationProducts.actualEnd === productsFilter.length-1}>
+                        <img src={btNextImg}></img>
+                    </button>               
                 </div>
             </div>
             <div className='products-container'>
@@ -100,7 +172,7 @@ const Products=(props)=>{
                 }
             </div>
             <div className='bottom-pagination-products'>
-                <p className='pagination-products-total'>32 of 32 products</p>
+                <p className='pagination-products-total'>{paginationProducts.actualEnd+1} of 32 products</p>
                 <div className='bt-products-back-next'>
                     <img src={btBackImg}></img>
                     <img src={btNextImg}></img>
