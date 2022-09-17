@@ -1,37 +1,45 @@
 import { useState,useEffect } from 'react'
 import './App.css'
 import { Task } from './components/Task'
+import { useLocalStorage } from './Hooks/useLocalStorage'
 import {v4 as uuid} from 'uuid'
+import {TodoCounter} from './components/TodoCounter'
+import { InputData } from './components/InputData'
 
 function App() {
-
+  const localName='TODO_V1'
   const [input,setInput]=useState('')
-  const [todo,setTodo]=useState([])
+  const {todo,saveTodo,loading}=useLocalStorage(localName,[])
 
-const addTask=()=>{
-  const taskInput={
-    id:uuid(),
-    text:input,
-    isCompleted:false
+  const addTask=()=>{
+    const taskInput={
+      id:uuid(),
+      text:input,
+      isCompleted:false
+    }
+    const finalArrayTodo = [...todo,taskInput]
+  
+    saveTodo(finalArrayTodo)
+    setInput('')
   }
-  setTodo(task=>[...task,taskInput])
-  setInput('')
-}
 
 const completeTask=(id)=>{
-  setTodo(tasks=>tasks.map(task=>{
-    if(task.id===id){
-      return {...task,isCompleted:!task.isCompleted}
-    }
-    return task
-  }))
+    const newTodoChange = todo.map(task=>{
+        if(task.id===id){
+        return {...task,isCompleted:!task.isCompleted}
+        }
+        return task
+    })
+    
+    saveTodo(newTodoChange)
 }
+
 const deleteTask=(id)=>{
-  const elementIndex=todo.map(task=>task.id).indexOf(id)
-  const todoCopy=todo.map(e=>e)
-  todoCopy.splice(elementIndex,1)
-  
-  setTodo(todoCopy)
+    const elementIndex=todo.map(task=>task.id).indexOf(id)
+    const todoCopy=todo.map(e=>e)
+    todoCopy.splice(elementIndex,1)
+    
+    saveTodo(todoCopy)
 }
 
 const taskList=todo.map((task)=>{
@@ -47,12 +55,19 @@ const taskList=todo.map((task)=>{
 
   return (
     <div className="App">
-        <h1>Has completado 1 de 1 todos</h1>
-        <input className='input' onChange={(e)=>setInput(e.target.value)} value={input} placeholder='ingrese Nombre'></input>
-        <button onClick={addTask}>Agregar</button>
-        <div className="container-task">
-          {taskList}
-        </div>
+       <TodoCounter
+        todoData={todo}
+       />
+      <InputData
+        input={input}
+        setInput={setInput}
+        addTask={addTask}
+      />
+          {(loading && <p>CARGANDO DATOS...</p>)}
+          {(!todo.length && !loading && <h3>INGRESA UNA TAREA!</h3>)}
+          <div className="container-task">
+              {taskList}
+            </div>
     </div>
   )
 }
