@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function filters ({ products, filterProducts, resetFilter }) {
+export default function filters ({ handleFilterProducts, resetFilter }) {
   const [categoryValue, setCategoryValue] = useState('')
   const [priceValue, setPriceValue] = useState(100)
   console.log(priceValue)
@@ -18,10 +18,11 @@ export default function filters ({ products, filterProducts, resetFilter }) {
       </select>
 
       <div className='flex gap-2 '>
-        <span>Precio: </span>
-        $<input value={priceValue} onChange={(e) => setPriceValue(e.target.value)} min='0' className='w-[4em]' type='number' />
+        <label htmlFor='price'>Price</label>
+        <input id='price' value={priceValue} onChange={(e) => setPriceValue(e.target.value)} min='0' max='5000' className='w-[4em]' type='range' />
+        ${priceValue}
       </div>
-      <button onClick={() => filterProducts(categoryValue, priceValue)}>Search</button>
+      <button onClick={() => handleFilterProducts(categoryValue, priceValue)}>Search</button>
       <button onClick={resetFilter}>Reset</button>
     </div>
   )

@@ -1,18 +1,34 @@
-import { products } from './mocks/products.json'
+import { products as initialProducts } from './mocks/products.json'
 import Products from './components/Products'
 import Filters from './components/Filters'
 import { useState } from 'react'
 
 function App () {
-  const [filteredProducts, setFilteredProducts] = useState(products)
+  const [products] = useState(initialProducts)
+  const [filterSelection, setFilterSelection] = useState({
+    category: 'all',
+    maxPrice: 100
+  })
 
-  function filterProducts (category, price) {
+  const filterProducts = () => {
     const allProducts = products
-    const newProductsFilter = allProducts.filter(product => {
-      return product.category === category && product.price <= price
+    return allProducts.filter(product => {
+      return product.price <= filterSelection.maxPrice &&
+       (
+         product.category === filterSelection.category ||
+         filterSelection.category === 'all'
+       )
     })
-    setFilteredProducts(newProductsFilter)
   }
+
+  function handleFilterProducts (category, price) {
+    setFilterSelection(last => ({
+      category,
+      maxPrice: price
+    }))
+  }
+
+  const filteredProducts = filterProducts()
 
   function resetFilter () {
     setFilteredProducts(products)
@@ -23,8 +39,7 @@ function App () {
       <div className='hero h-[100px] w-full' />
       <div className='flex flex-col gap-8 max-w-3xl m-auto px-5'>
         <Filters
-          products={products}
-          filterProducts={filterProducts}
+          handleFilterProducts={handleFilterProducts}
           resetFilter={resetFilter}
         />
         <Products products={filteredProducts} />
