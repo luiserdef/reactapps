@@ -5,10 +5,15 @@
     /* border:solid red 1px; */
 }
 
+:root{
+    --mainColor:#272247;
+    --secondaryColor:#2F2956;
+}
+
 body{
     font-family: 'Rubik', sans-serif;
     font-family: 'Yantramanav', sans-serif;
-    background-color: #dadada;
+    background-color: var(--secondaryColor);
 }
 img{
     width:100%;
@@ -20,7 +25,7 @@ img{
 }
 
 .hero{
-    background-color: #386fe6;
+    background-color: var(--mainColor);
     color:#ffffff;
     height: 250px;
     text-align: center;
